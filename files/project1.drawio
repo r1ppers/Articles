@@ -1,0 +1,46 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 YaBrowser/24.12.0.0 Safari/537.36" version="26.0.6">
+  <diagram name="Страница — 1" id="KO8SQa6toFmQcF211DAh">
+    <mxGraphModel dx="819" dy="474" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="nwr5BZ4bufket2CfbTGj-2" value="ID&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;PK&lt;div&gt;First name&lt;/div&gt;&lt;div&gt;Last name&lt;/div&gt;&lt;div&gt;Middle name&lt;/div&gt;&lt;div&gt;Birth date&lt;/div&gt;&lt;div&gt;Password&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="250" y="290" width="190" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="nwr5BZ4bufket2CfbTGj-3" value="USER" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="250" y="260" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="nwr5BZ4bufket2CfbTGj-4" value="ID&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;PK&lt;div&gt;Title&lt;/div&gt;&lt;div&gt;Data&lt;/div&gt;&lt;div&gt;Publish date&lt;/div&gt;&lt;div&gt;Author_id&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; FK&lt;/div&gt;&lt;div&gt;Category_id&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; FK&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="510" y="290" width="190" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="nwr5BZ4bufket2CfbTGj-5" value="ARTICLE" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="510" y="260" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="nwr5BZ4bufket2CfbTGj-6" value="ID&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;PK&lt;div&gt;Name&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="250" y="460" width="190" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="nwr5BZ4bufket2CfbTGj-7" value="&lt;span style=&quot;white-space-collapse: preserve;&quot; data-src-align=&quot;0:9&quot; class=&quot;EzKURWReUAB5oZgtQNkl&quot;&gt;CATEGORY&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="250" y="430" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="nwr5BZ4bufket2CfbTGj-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.002;entryY=0.683;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="440.0000000000001" y="312.0114942528736" as="sourcePoint" />
+            <mxPoint x="510.3799999999999" y="373.96000000000004" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="475" y="312" />
+              <mxPoint x="475" y="374" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nwr5BZ4bufket2CfbTGj-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.001;entryY=0.808;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="nwr5BZ4bufket2CfbTGj-6" target="nwr5BZ4bufket2CfbTGj-4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="475" y="480" />
+              <mxPoint x="475" y="387" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
