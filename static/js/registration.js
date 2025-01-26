@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('form');
 
     form.addEventListener('submit', function(event) {
-        event.preventDefault(); // Предотвращаем стандартное поведение формы
+        event.preventDefault(); // Предотвращает стандартное поведение формы, то есть перезагрузку страницы при отправке формы.
 
         const firstName = document.getElementById('first-name').value;
         const lastName = document.getElementById('last-name').value;

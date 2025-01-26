@@ -4,7 +4,7 @@ from re import template
 from fastapi import Body, Depends, FastAPI, HTTPException, Path, Query, Body, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from typing import Optional, List, Dict, Annotated
+from typing import Annotated
 import models
 from database import engine, SessionLocal
 from sqlalchemy.orm import Session
@@ -55,21 +55,21 @@ db_dependence = Annotated[Session, Depends(get_db)]
 
 #Получение пользователя
 @app.get("/user/{id}")
-async def get_user(id: int, db: db_dependence):
+async def get_user(id: Annotated[int, Path(title="ID пользователя", ge=0)], db: db_dependence):
     result = db.query(models.Author).filter(models.Author.author_id == id).first()
     error_404("user not found", result)
     return result
 
 #Получение категории
 @app.get("/category")
-async def get_category(category_name: str, db: db_dependence):
+async def get_category(category_name: Annotated[str, Query(title="Название категории" ,min_length=2)], db: db_dependence):
     result = db.query(models.Category).filter(models.Category.category_name == category_name).first()
     error_404("category not found", result)
     return result
 
 #Получение статьи
 @app.get("/article/{id}")
-async def get_article(id: int, db:db_dependence):
+async def get_article(id: Annotated[int, Path(title="ID статьи", ge=0)], db:db_dependence):
     result = db.query(models.Article).filter(models.Article.pk_article_id == id).first()
     error_404("article not found", result)
     return result
