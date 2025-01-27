@@ -1,6 +1,7 @@
 import code
 from datetime import date, datetime
 from re import template
+from turtle import title
 from fastapi import Body, Depends, FastAPI, HTTPException, Path, Query, Body, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -9,11 +10,18 @@ import models
 from database import engine, SessionLocal
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
+import hashlib
 
 #Проверка на наличие объекта
 def error_404(error_text: str, object_to_check: bool):
     if not object_to_check:
         raise HTTPException(status_code=404, detail=error_text)
+
+#Хеширование пароля
+def hash_password(password: str, author_login: str):
+    password += password[0] + password[-1] + 'some_salt_for_hashing' + author_login
+    password = hashlib.sha256(password.encode()).hexdigest()
+    return password
 
 app = FastAPI()
 #Подключение шаблонов (HTML)
@@ -26,6 +34,7 @@ class AuthorBase(BaseModel):
     last_name: str 
     middle_name: str
     birth_date: date
+    author_login: str
     author_password: str
 
 class CategoryBase(BaseModel):
@@ -90,7 +99,8 @@ async def add_user(author: AuthorBase, db: db_dependence):
         last_name = author.last_name,
         middle_name = author.middle_name,
         birth_date = author.birth_date,
-        author_password = author.author_password
+        author_login = author.author_login,
+        author_password = hash_password(author.author_password, author.author_login)
     )
     db.add(db_author)
     db.commit()

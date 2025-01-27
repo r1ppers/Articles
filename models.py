@@ -10,6 +10,7 @@ class Author(Base):
     last_name: Mapped[str]= mapped_column()
     middle_name: Mapped[str]= mapped_column()
     birth_date: Mapped[date]= mapped_column()
+    author_login: Mapped[str] = mapped_column()
     author_password: Mapped[str]= mapped_column()
 
 class Category(Base):
