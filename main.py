@@ -1,17 +1,11 @@
-import code
 from datetime import date, datetime
-from re import template
-from turtle import title
-from fastapi import Body, Depends, FastAPI, HTTPException, Path, Query, Body, Request
-from fastapi.templating import Jinja2Templates
-from fastapi.staticfiles import StaticFiles
+from fastapi import APIRouter, Body, Depends, FastAPI, HTTPException, Path, Query, Body, Request
 from typing import Annotated
 import models as models
 from database import engine, SessionLocal
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, Field, field_validator
 import hashlib
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncAttrs
 
 #Проверка на наличие объекта
 def error_404(error_text: str, object_to_check: bool):
@@ -25,10 +19,6 @@ def hash_password(password: str, author_login: str):
     return password
 
 app = FastAPI()
-#Подключение шаблонов (HTML)
-#template = Jinja2Templates(directory="templates/HTML")
-#Подключение статических файлов (CSS)
-#app.mount("/static", StaticFiles(directory="static"), name="static")
 
 class AuthorBase(BaseModel):
     first_name: str = Field(..., description='Имя пользователя от 1 до 50 символов', min_length=1, max_length=50)
@@ -90,14 +80,6 @@ async def get_article(id: Annotated[int, Path(title="ID статьи", ge=0)], d
     result = db.query(models.Article).filter(models.Article.pk_article_id == id).first()
     error_404("article not found", result)
     return result
-
-#Страница с регистрацией
-#@app.get("/registration")
-#async def registration(req: Request):
-#    return template.TemplateResponse(
-#        name="registration.html",
-#        context={"request": req}
-#    )
 
 #Добавление пользователя
 @app.post("/addUser")
