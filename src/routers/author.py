@@ -3,9 +3,9 @@ import hashlib
 from typing import Annotated, Optional
 from fastapi import HTTPException, Path, APIRouter
 from pydantic import BaseModel, Field, field_validator
-from models import Author
-from database import db_dependence
-from errors import given_error
+from src.models import Author
+from src.database import db_dependence
+from src.errors import given_error
 
 #Хеширование пароля
 def hash_password(password: str, author_login: str):
@@ -13,7 +13,7 @@ def hash_password(password: str, author_login: str):
     password = hashlib.sha256(password.encode()).hexdigest()
     return password
 
-router = APIRouter()
+router = APIRouter(prefix='/author', tags=['router для автора'])
 
 class AuthorBase(BaseModel):
     first_name: str = Field(..., description='Имя пользователя от 1 до 50 символов', min_length=1, max_length=50)
@@ -33,14 +33,14 @@ class AuthorBase(BaseModel):
         return birth_date
 
 #Получение пользователя
-@router.get("/user/{id}")
+@router.get("/getAuthor/{id}")
 async def get_user(id: Annotated[int, Path(title="ID пользователя", ge=0)], db: db_dependence):
     result = db.query(Author).filter(Author.author_id == id).first()
     given_error("user not found", result, 404)
     return result
 
 #Добавление пользователя
-@router.post("/addUser")
+@router.post("/addAuthor")
 async def add_user(author: AuthorBase, db: db_dependence):
     db_author = Author(
         first_name = author.first_name,

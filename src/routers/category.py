@@ -1,19 +1,19 @@
 from datetime import datetime, date
 from os import error
 from typing import Annotated
-from fastapi import HTTPException, Path, APIRouter, Query
+from fastapi import APIRouter, Query
 from pydantic import BaseModel, Field, field_validator
-from models import Category
-from database import db_dependence
-from errors import given_error
+from src.models import Category
+from src.database import db_dependence
+from src.errors import given_error
 
-router = APIRouter()
+router = APIRouter(prefix='/category', tags=['router для категорий'])
 
 class CategoryBase(BaseModel):
     category_name: str = Field(..., description='Название категории', min_length=1, max_length=50)
 
 #Получение категории
-@router.get("/category")
+@router.get("/getCategory")
 async def get_category(category_name: Annotated[str, Query(title="Название категории" ,min_length=2)], db: db_dependence):
     result = db.query(Category).filter(Category.category_name == category_name).first()
     given_error("category not found", result, 404)

@@ -1,12 +1,12 @@
-from datetime import datetime, date
+from datetime import date
 from typing import Annotated
 from fastapi import HTTPException, Path, APIRouter
-from pydantic import BaseModel, Field, field_validator
-from models import Article
-from database import db_dependence
-from errors import given_error
+from pydantic import BaseModel, Field
+from src.models import Article
+from src.database import db_dependence
+from src.errors import given_error
 
-router = APIRouter()
+router = APIRouter(prefix='/article', tags=['router для статей'])
 
 class ArticleBase(BaseModel):
     title: str = Field(..., description='Название статьи', min_length=1, max_length=50)
@@ -16,7 +16,7 @@ class ArticleBase(BaseModel):
     fk_category_id: int = Field(..., description='Идентификатор категории (Внешний ключ)')
 
 #Получение статьи
-@router.get("/article/{id}")
+@router.get("/getArticle/{id}")
 async def get_article(id: Annotated[int, Path(title="ID статьи", ge=0)], db:db_dependence):
     result = db.query(Article).filter(Article.pk_article_id == id).first()
     given_error("article not found", result, 404)
