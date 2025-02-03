@@ -16,14 +16,14 @@ class ArticleBase(BaseModel):
     fk_category_id: int = Field(..., description='Идентификатор категории (Внешний ключ)')
 
 #Получение статьи
-@router.get("/getArticle/{id}")
+@router.get("/get/{id}")
 async def get_article(id: Annotated[int, Path(title="ID статьи", ge=0)], db:db_dependence):
     result = db.query(Article).filter(Article.pk_article_id == id).first()
     given_error("article not found", result, 404)
     return result
 
 #Добваление статьи
-@router.post("/addArticle")
+@router.post("/add")
 async def addArticle(article: ArticleBase, db: db_dependence):
     db_article = Article(
         title = article.title,

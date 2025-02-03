@@ -1,6 +1,7 @@
+import re
 from sqlalchemy import ForeignKey
 from datetime import date
-from sqlalchemy.orm import mapped_column, Mapped
+from sqlalchemy.orm import mapped_column, Mapped, relationship
 from src.database import Base
 
 
@@ -15,6 +16,9 @@ class Author(Base):
     author_email: Mapped[str] = mapped_column()
     author_password: Mapped[str]= mapped_column()
 
+    #Установка каскадного удаления для связанных объектов
+    articles = relationship("Article", back_populates="author", cascade="all, delete")
+
 class Category(Base):
     __tablename__ = 'category'
     category_id: Mapped[int]= mapped_column(primary_key=True, index = True, autoincrement=True)
@@ -28,3 +32,6 @@ class Article(Base):
     publish_date: Mapped[date]= mapped_column()
     fk_author_id: Mapped[int]= mapped_column(ForeignKey("author.author_id"))
     fk_category_id: Mapped[int] = mapped_column(ForeignKey("category.category_id"))
+
+    #Установка каскадного удаления для связанных объектов
+    author = relationship("Author", back_populates="articles")

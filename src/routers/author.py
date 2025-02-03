@@ -1,5 +1,6 @@
 from datetime import datetime, date
 import hashlib
+from operator import ge
 from typing import Annotated, Optional
 from fastapi import HTTPException, Path, APIRouter
 from pydantic import BaseModel, Field, field_validator
@@ -33,14 +34,14 @@ class AuthorBase(BaseModel):
         return birth_date
 
 #Получение пользователя
-@router.get("/getAuthor/{id}")
+@router.get("/get/{id}")
 async def get_user(id: Annotated[int, Path(title="ID пользователя", ge=0)], db: db_dependence):
     result = db.query(Author).filter(Author.author_id == id).first()
     given_error("user not found", result, 404)
     return result
 
 #Добавление пользователя
-@router.post("/addAuthor")
+@router.post("/add")
 async def add_user(author: AuthorBase, db: db_dependence):
     db_author = Author(
         first_name = author.first_name,
@@ -56,3 +57,44 @@ async def add_user(author: AuthorBase, db: db_dependence):
     db.commit()
     db.refresh(db_author)
     return db_author
+
+@router.put("/Update/{id}")
+async def put_author(id: Annotated[int, Path(title="id пользователя")], author: AuthorBase, db: db_dependence):
+    db_author = db.query(Author).filter(Author.author_id == id).first()
+    given_error("Пользователь не найден", db_author, 404)
+
+    db_author.first_name = author.first_name
+    db_author.last_name = author.last_name
+    db_author.middle_name = author.middle_name
+    db_author.birth_date = author.birth_date
+    db_author.author_login = author.author_login
+    db_author.author_email = author.author_email
+    
+    # Проверяем валидность даты рождения
+    author.validate_birth_date(author.birth_date)
+    
+    # Сохраняем изменения в базе данных
+    db.commit()
+    db.refresh(db_author)
+    
+    return db_author
+
+@router.put("/updatePassword/{id}")
+async def update_password(id: Annotated[int, Path(title="Id пользователя", ge=0)], old_password: str, new_password: str ,db: db_dependence):
+    db_author = db.query(Author).filter(Author.author_id == id).first()
+    given_error("Пользователь не найден", db_author, 404)
+    if hash_password(old_password, db_author.author_login) != db_author.author_password:
+        raise HTTPException(status_code=400, detail="Неправильный пароль")
+    db_author.author_password = hash_password(new_password, db_author.author_login)
+    db.commit()
+    db.refresh(db_author)
+    return db_author
+
+@router.delete('/delete/{id}')
+async def delete_user(id: Annotated[int, Path(title="Id пользователя", ge=0)], db: db_dependence):
+    db_author = db.query(Author).filter(Author.author_id == id).first()
+    given_error("Пользователь не найден", db_author, 404)
+    db.delete(db_author)
+    db.commit()
+
+    return {'Сообщение': "Пользователь удален"}

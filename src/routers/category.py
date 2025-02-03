@@ -13,14 +13,14 @@ class CategoryBase(BaseModel):
     category_name: str = Field(..., description='Название категории', min_length=1, max_length=50)
 
 #Получение категории
-@router.get("/getCategory")
+@router.get("/get")
 async def get_category(category_name: Annotated[str, Query(title="Название категории" ,min_length=2)], db: db_dependence):
     result = db.query(Category).filter(Category.category_name == category_name).first()
     given_error("category not found", result, 404)
     return result
 
 #Добавление категории
-@router.post("/addCategory")
+@router.post("/add")
 async def add_category(category: CategoryBase, db: db_dependence):
     db_category=Category(
         category_name = category.category_name
