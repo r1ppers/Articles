@@ -1,14 +1,12 @@
-from datetime import datetime, date
 from operator import ge
-from os import error
-from turtle import title
 from typing import Annotated
 from anyio import Path
-from fastapi import APIRouter, Query, Path
+from fastapi import APIRouter, Query, Path, Depends
 from pydantic import BaseModel, Field, field_validator
 from src.models import Category
 from src.database import db_dependence
-from src.errors import given_error
+from src.errors import given_error, error_forbidden_admin_only
+from src.routers.auth import oauth2_bearer
 
 router = APIRouter(prefix='/category', tags=['router для категорий'])
 
@@ -24,7 +22,8 @@ async def get_category(category_name: Annotated[str, Query(title="Названи
 
 #Добавление категории
 @router.post("/add")
-async def add_category(category: CategoryBase, db: db_dependence):
+async def add_category(category: CategoryBase, token: Annotated[str, Depends(oauth2_bearer)], db: db_dependence):
+    await error_forbidden_admin_only(token, db)
     db_category=Category(
         category_name = category.category_name
     )
@@ -34,9 +33,10 @@ async def add_category(category: CategoryBase, db: db_dependence):
     return db_category
 
 @router.put("/update/{id}")
-async def update_category(id: Annotated[int, Path(title="id категории", ge=0)], category: CategoryBase, db:db_dependence):
+async def update_category(id: Annotated[int, Path(title="id категории", ge=0)], category: CategoryBase, token: Annotated[str, Depends(oauth2_bearer)], db:db_dependence):
     db_category = db.query(Category).filter(Category.category_id == id).first()
     given_error("Категория не найдена", db_category, 404)
+    await error_forbidden_admin_only(token, db)
     db_category.category_name = category.category_name
 
     db.commit()
@@ -45,10 +45,10 @@ async def update_category(id: Annotated[int, Path(title="id категории",
     return db_category
 
 @router.delete("/delete/{id}")
-async def delete_category(id: Annotated[int, Path(title='id категории', ge=0)], db: db_dependence):
+async def delete_category(id: Annotated[int, Path(title='id категории', ge=0)], token: Annotated[str, Depends(oauth2_bearer)], db: db_dependence):
     db_category = db.query(Category).filter(Category.category_id == id).first()
     given_error("Категория не найдена", db_category, 404)
-
+    await error_forbidden_admin_only(token, db)
     db.delete(db_category)
     db.commit()
 

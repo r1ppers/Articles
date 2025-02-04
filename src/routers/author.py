@@ -1,18 +1,12 @@
 from datetime import datetime, date
-import hashlib
-from operator import ge
-from typing import Annotated, Optional
-from fastapi import HTTPException, Path, APIRouter
+from typing import Annotated
+from fastapi import HTTPException, Path, APIRouter, Depends
 from pydantic import BaseModel, Field, field_validator
 from src.models import Author
 from src.database import db_dependence
-from src.errors import given_error
-
-#Хеширование пароля
-def hash_password(password: str, author_login: str):
-    password += password[0] + password[-1] + 'some_salt_for_hashing' + author_login
-    password = hashlib.sha256(password.encode()).hexdigest()
-    return password
+from src.errors import given_error, error_forbidden_admin_only, error_forbidden_admin_and_user
+from src.routers.auth import oauth2_bearer
+from src.hash_password import hash_password
 
 router = APIRouter(prefix='/author', tags=['router для автора'])
 
@@ -24,6 +18,7 @@ class AuthorBase(BaseModel):
     author_login: str = Field(..., description='Логин пользователя', min_length=1, max_length=50)
     author_email: str = Field(..., description='Электронная почта пользователя')
     author_password: str = Field(..., description='Пароль пользователя', min_length=1, max_length=50)
+    fk_role_id: int = Field(..., description='Роль пользователя')
 
     #Указание корректной даты рождения
     @field_validator('birth_date')
@@ -79,6 +74,18 @@ async def put_author(id: Annotated[int, Path(title="id пользователя"
     
     return db_author
 
+@router.put("/updateRole/{id}")
+async def update_role(id: Annotated[int, Path(title='id пользователя')], id_role: int, token: Annotated[str, Depends(oauth2_bearer)], db: db_dependence):
+    db_author = db.query(Author).filter(Author.author_id == id).first()
+    given_error("Пользователь не найден", db_author, 404)
+    await error_forbidden_admin_only(token, db)
+    db_author.fk_role = id_role
+    db.commit()
+    db.refresh(db_author)
+
+    return db_author
+
+
 @router.put("/updatePassword/{id}")
 async def update_password(id: Annotated[int, Path(title="Id пользователя", ge=0)], old_password: str, new_password: str ,db: db_dependence):
     db_author = db.query(Author).filter(Author.author_id == id).first()
@@ -91,10 +98,11 @@ async def update_password(id: Annotated[int, Path(title="Id пользовате
     return db_author
 
 @router.delete('/delete/{id}')
-async def delete_user(id: Annotated[int, Path(title="Id пользователя", ge=0)], db: db_dependence):
+async def delete_user(id: Annotated[int, Path(title="Id пользователя", ge=0)], token: Annotated[str, Depends(oauth2_bearer)], db: db_dependence):
     db_author = db.query(Author).filter(Author.author_id == id).first()
     given_error("Пользователь не найден", db_author, 404)
+    #Проверка пользователь сам удаляет свой профиль или является ли пользователь, от которого исходит запрос, администратором 
+    await error_forbidden_admin_and_user(token, db, db_author)
     db.delete(db_author)
     db.commit()
-
     return {'Сообщение': "Пользователь удален"}

@@ -1,5 +1,5 @@
 import re
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, false
 from datetime import date
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 from src.database import Base
@@ -15,6 +15,8 @@ class Author(Base):
     author_login: Mapped[str] = mapped_column()
     author_email: Mapped[str] = mapped_column()
     author_password: Mapped[str]= mapped_column()
+    #default = 1, под номером один находится обычный пользователь
+    fk_role: Mapped[int] = mapped_column(ForeignKey('user_role.pk_role_id'), default=1, nullable=False)
 
     #Установка каскадного удаления для связанных объектов
     articles = relationship("Article", back_populates="author", cascade="all, delete")
@@ -35,3 +37,8 @@ class Article(Base):
 
     #Установка каскадного удаления для связанных объектов
     author = relationship("Author", back_populates="articles")
+
+class Role(Base):
+    __tablename__ = 'user_role'
+    pk_role_id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
+    role_name: Mapped[str]
