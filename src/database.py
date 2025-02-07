@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base, Session
 from fastapi import Depends
 
 
-URL_DATABASE = 'postgresql+psycopg2://postgres:892255@localhost:5432/project'
+URL_DATABASE = 'postgresql://postgres:892255@db:5432/project'
 
 engine = create_engine(
     URL_DATABASE

@@ -12,7 +12,7 @@ import src.models as models
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-config.set_main_option('sqlalchemy.url', 'postgresql+psycopg2://postgres:892255@localhost:5432/project')
+config.set_main_option('sqlalchemy.url', 'postgresql://postgres:892255@db:5432/project')
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
