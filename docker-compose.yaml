@@ -10,7 +10,7 @@ services:
       - 8000:8000
     restart: always
 
-  db:
+  db: 
     image: postgres:16
     restart: always
     environment:
@@ -19,3 +19,13 @@ services:
       POSTGRES_PASSWORD: "892255"
     ports:
       - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+volumes:
+  postgres_data:
